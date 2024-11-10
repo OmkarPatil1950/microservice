@@ -1,0 +1,52 @@
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.demo.UserDTO;
+import com.example.demo.entity.User;
+import com.example.demo.service.userService;
+
+@RestController
+@RequestMapping("/users")
+public class userController {
+
+	@Autowired
+	private userService userservice;
+	
+	public ResponseEntity<?> getAllUsers(){
+		
+		List<User> user = userservice.getAllUsers();
+		return new ResponseEntity(user,HttpStatus.OK);
+	}
+	
+	
+	public ResponseEntity<?>saveUser(@RequestBody UserDTO userdto){
+	    try {
+            User user = mapToEntity(userdto);
+
+           User users= userservice.saveUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ua);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving user: " + e.getMessage());
+        }
+		
+	}
+	
+	
+	
+	private User mapToEntity(UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setContact(userDTO.getContact());
+        // Map other fields as needed
+        return user;
+    }
+}

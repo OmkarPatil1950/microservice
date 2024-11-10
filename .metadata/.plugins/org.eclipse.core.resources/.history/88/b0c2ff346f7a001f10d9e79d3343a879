@@ -1,0 +1,33 @@
+package com.example.demo.DTO;
+
+import java.sql.Date;
+
+import com.example.order.entity.Orderdetails;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public class OrderEntityDTO {
+	
+	private int orderId;
+
+	private String productName;
+
+	private Date orderOn;
+
+	private String orderAddress;
+
+	private int userId;
+
+	private Orderdetails orderdetails;
+}

@@ -1,0 +1,86 @@
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: apigatewayr
+    ports:
+      - "8080:8080"
+    networks:
+      - microservice-network
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
+    # volumes:
+    #   - ./api-gateway/target:/app
+    depends_on:
+      - DiscoveryServer
+    command: "java -jar /app/apigateway.jar"
+
+  DiscoveryServer:
+    build:
+      context: ./DiscoveryServer
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservice-network
+    environment:
+      - eureka.client.registerWithEureka=false
+      - eureka.client.fetchRegistry=false
+      - eureka.server.enableSelfPreservation=false
+    # volumes:
+    #   - ./DiscoveryServer/target:/app
+    command: "java -jar /app/discoveryserver.jar"
+
+  UserService:
+    build:
+      context: ./User_service
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    networks:
+      - microservice-network
+    depends_on:
+      - DiscoveryServer
+      - shared-db
+    # volumes:
+    #   - ./UserService/target:/app
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:5432/demo-docker
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=omkar
+    command: "java -jar /app/userservice.jar"
+
+  OrderService:
+    build:
+      context: ./Orderservice
+    container_name: order-service
+    ports:
+      - "8082:8082"
+    networks:
+      - microservice-network
+    depends_on:
+      - DiscoveryServer
+      - shared-db
+    # volumes: 
+    #   - ./Orderservice/target:/app
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:5432/demo-docker
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=omkar
+    command: "java -jar /app/orderservice.jar"
+
+  shared-db:
+    image: postgres:15
+    container_name: shared-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: omkar
+      POSTGRES_DB: demo-docker
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
+
+networks:
+  microservice-network:
+    driver: bridge

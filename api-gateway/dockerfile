@@ -1,0 +1,8 @@
+FROM openjdk:17
+
+COPY target/apigateway.jar app.jar
+
+
+EXPOSE 8761
+
+ENTRYPOINT [ "java","-jar","/apigateway.jar" ]

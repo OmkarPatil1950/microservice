@@ -1,0 +1,28 @@
+spring.application.name=api-gateway
+
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+spring.main.web-application-type=reactive
+
+
+### for more info about what happing on api gateway level
+#logging.level.root = INFO
+#logging.level.org.springframework.cloud.gateway.route.RouteDefinitionLocator = INFO
+#logging.level.org.springframework.cloud.gateway= TRACE
+
+
+
+### route for user service
+
+spring.cloud.gateway.routes[0].id=UserService
+spring.cloud.gateway.routes[0].uri=http://localhost:8081
+spring.cloud.gateway.routes[0].predicates[0]=Path=/api/users/**
+
+### predicate ---> it is set of the condtions used to match the request 
+### here the predicate is type path if path /api/users then predicate will true and Userservice
+#spring.cloud.gateway.routes[0].predicate[1]=Method=GET   here id method type is get then it should navigate to /api/users
+
+### route for the order service
+
+spring.cloud.gateway.routes[1].id=Orderservice
+spring.cloud.gateway.routes[1].uri=lb://Orderservice
+spring.cloud.gateway.routes[1].predicates[0]=Path=/api/order/**

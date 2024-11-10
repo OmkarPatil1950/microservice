@@ -1,0 +1,71 @@
+package com.example.demo.DTO;
+
+import org.hibernate.validator.constraints.UniqueElements;
+
+import com.example.demo.entity.UserDetails;
+
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+public class UserDTO {
+
+	@NotBlank(message = "Name cannot be blank")
+	private String name;
+
+	@Column(nullable = false, unique = true, length = 255)
+	@NotBlank(message = "Email cannot be blank")
+	@Size(max = 255, message = "Email must be less than 255 characters")
+	@Email(message = "Email should be valid")
+	@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+	private String email;
+	
+	@Size(min = 10, max = 10, message = "Contact number must be exactly 10 digits")
+	@Pattern(regexp = "^\\d{10}$", message = "Contact number must be numeric and exactly 10 digits")
+	@Column(length = 10)
+	private String contact;
+	
+	
+	private UserDetails userdetails;
+
+	public UserDetails getUserdetails() {
+		return userdetails;
+	}
+
+	public void setUserdetails(UserDetails userdetails) {
+		this.userdetails = userdetails;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDTO [name=" + name + ", email=" + email + ", contact=" + contact + "]";
+	}
+
+}

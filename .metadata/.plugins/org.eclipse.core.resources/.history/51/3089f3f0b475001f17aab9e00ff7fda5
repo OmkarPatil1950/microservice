@@ -1,0 +1,10 @@
+package com.example.demo.demo;
+
+public class UserDTO {
+	
+	private int userId;
+	private String name;
+	private String email;
+	private int contact;
+	private String address;
+}

@@ -1,0 +1,75 @@
+spring.application.name=User_service
+
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/demo
+spring.datasource.username=postgres
+spring.datasource.password=omkar
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=true
+server.port=8081
+
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+
+
+
+
+## actuator for health monitoring
+
+management.health.circuitbreakers.enabled=true
+### this is to enable the circuit breaker
+management.endpoints.web.exposure.include=*
+management.endpoint.health.show-details=always
+
+
+## resilience4j dependancy
+resilience4j.circuitbreaker.instances.user.register-health-indicator=true
+### above is for to track the condition like open, close , half-open 
+resilience4j.circuitbreaker.instances.user.event-consumer-buffer-size=10
+### above is for events
+resilience4j.circuitbreaker.instances.user.sliding-window-type=count-based
+resilience4j.circuitbreaker.instances.user.sliding-window-size=5
+### above two are for after how many back to back failed request the c b should open , so it is count based and count is 5
+
+resilience4j.circuitbreaker.instances.user.failure-rate-threshold=50
+### after 50% failed request
+
+resilience4j.circuitbreaker.instances.user.wait-duration-in-open-state=5s
+### in open state it should wait for 5sec then it will go to half open state
+
+resilience4j.circuitbreaker.instances.user.permitted-number-of-calls-in-half-open-state=3
+### in halft open state it will give 3 calls to check the service is on or not ,
+### after 3 calls if service is still failed then it will go in the open and after 5sec it will start
+### if service two is working then it will go in the closed state
+
+resilience4j.circuitbreaker.instances.user.automatic-transition-from-open-to-half-open-enabled=true
+### after 5sec in open it will automatically trasfer to the half-open
+
+
+### resilenace4J timeout mechanism
+resilience4j.timelimiter.instances.user.timeout-duration=3s
+### above is for if both services are up and running still web clinet api is taking time more than 3sec to respond then it should give time out exceotion
+
+resilience4j.retry.instances.user.max-attempts=2
+### above is for retry attempts
+
+resilience4j.retry.instances.user.wait-duration=5s
+### after 5 sec it will retry after 10sec toparyant thread sleep madun nighel
+
+
+
+
+### kafka for msging
+
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.consumer.group-id=7
+spring.kafka.consumer.auto-offset-reset=earliest
+### this means first send msg will  retrived first
+
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+spring.kafka.consumer.properties.spring.deserializer.value.delegate.class=org.springframework.kafka.support.serializer.JsonDeserializer
+spring.kafka.consumer.properties.spring.json.trusted.packages=com.example.order.dto  
+### the dto name should be same as the dto name in consumer 
+

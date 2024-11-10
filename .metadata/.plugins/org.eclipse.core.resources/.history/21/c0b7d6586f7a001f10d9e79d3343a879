@@ -1,0 +1,23 @@
+package com.example.demo.DTO;
+
+import com.example.order.entity.OrderEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+
+public class OrderdetailsDto {
+	private int orderdetailsId;
+
+	private String orderStatus;
+
+	private int quantity;
+
+	private int productPrice;
+
+	private OrderEntityDTO orders;
+
+}

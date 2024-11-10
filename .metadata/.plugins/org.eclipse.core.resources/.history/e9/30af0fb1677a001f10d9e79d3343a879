@@ -1,0 +1,14 @@
+package com.example.demo.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class WebClientConfig {
+
+	 @Bean
+	    public WebClient webClient(WebClient.Builder webClientBuilder) {
+	        // Build the WebClient using the configured WebClient.Builder
+	        return webClientBuilder.build();
+	    }
+}

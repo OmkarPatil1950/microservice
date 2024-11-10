@@ -1,0 +1,46 @@
+package com.example.demo.DTO;
+
+import com.example.demo.entity.UserDetails;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+
+public class UserDTO {
+	
+	@NotBlank(message = "Name cannot be blank")
+	private String name;
+	private String email;
+	private String contact;
+	private UserDetails userdetails;
+
+	public UserDetails getUserdetails() {
+		return userdetails;
+	}
+	public void setUserdetails(UserDetails userdetails) {
+		this.userdetails = userdetails;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String  getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	@Override
+	public String toString() {
+		return "UserDTO [name=" + name + ", email=" + email + ", contact=" + contact + "]";
+	}
+	
+}

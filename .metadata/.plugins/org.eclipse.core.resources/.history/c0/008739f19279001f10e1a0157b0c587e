@@ -1,0 +1,48 @@
+package com.example.demo.serviceImplimentation;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.DTO.UserDTO;
+import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.userService;
+
+@Service
+public class userServiceImpl implements userService {
+
+	@Autowired
+	private UserRepository userrepository;
+	
+	@Override
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		return userrepository.findAll();
+	}
+
+	@Override
+	public User saveUser(UserDTO user) {
+		// TODO Auto-generated method stub
+		return userrepository.save(user);
+	}
+	private User mapToEntity(UserDTO userDTO) {
+		User user = new User();
+		user.setName(userDTO.getName());
+		user.setEmail(userDTO.getEmail());
+		user.setContact(userDTO.getContact());
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setGender(userDTO.getUserdetails().getGender());
+		userDetails.setAge(userDTO.getUserdetails().getAge());
+		userDetails.setAddress(userDTO.getUserdetails().getAddress());
+		userDetails.setPincode(userDTO.getUserdetails().getPincode());
+
+		user.setUserdetails(userDetails);
+		userDetails.setUsers(user);
+		// Map other fields as needed
+		return user;
+	}
+}

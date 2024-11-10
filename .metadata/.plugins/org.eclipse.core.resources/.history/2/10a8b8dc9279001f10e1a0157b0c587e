@@ -1,0 +1,62 @@
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.DTO.UserDTO;
+import com.example.demo.entity.User;
+import com.example.demo.entity.UserDetails;
+import com.example.demo.service.userService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/users")
+public class userController {
+
+	@Autowired
+	private userService userservice;
+
+	@GetMapping
+	public ResponseEntity<?> getAllUsers() {
+
+		List<User> user = userservice.getAllUsers();
+		return new ResponseEntity(user, HttpStatus.OK);
+	}
+
+	@PostMapping("/save")
+	public ResponseEntity<?> saveUser(@RequestBody @Valid UserDTO userdto) {
+
+		User user = mapToEntity(userdto);
+		User savedUser = userservice.saveUser(user);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body("User created successfully with userId: " + savedUser.getUserId());
+	}
+
+	private User mapToEntity(UserDTO userDTO) {
+		User user = new User();
+		user.setName(userDTO.getName());
+		user.setEmail(userDTO.getEmail());
+		user.setContact(userDTO.getContact());
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setGender(userDTO.getUserdetails().getGender());
+		userDetails.setAge(userDTO.getUserdetails().getAge());
+		userDetails.setAddress(userDTO.getUserdetails().getAddress());
+		userDetails.setPincode(userDTO.getUserdetails().getPincode());
+
+		user.setUserdetails(userDetails);
+		userDetails.setUsers(user);
+		// Map other fields as needed
+		return user;
+	}
+}
